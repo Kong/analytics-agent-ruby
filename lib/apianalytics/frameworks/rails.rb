@@ -1,4 +1,4 @@
-module ApiAnalytics
+module ApiAnalytics::Frameworks
   module Rails
 
     def apianalytics!(api_key)

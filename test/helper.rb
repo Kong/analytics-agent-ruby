@@ -38,16 +38,37 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'apianalytics'
 
 class MiniTest::Test
+  Thread.abort_on_exception = true
+
+  @@zmq_context = ZMQ::Context.create(1)
+
+  def zmq_pull_socket(host)
+    pull_socket = @@zmq_context.socket(ZMQ::PULL)
+    pull_socket.setsockopt(ZMQ::LINGER, 0)
+    rc = pull_socket.bind(host)
+
+    if not ZMQ::Util.resultcode_ok?(rc)
+      STDERR.puts "Operation failed, errno [#{ZMQ::Util.errno}] description [#{ZMQ::Util.error_string}]"
+      caller(1).each { |callstack| STDERR.puts(callstack) }
+    end
+
+    return pull_socket
+  end
 
   def zmq_pull_once(socket)
     Thread.new do
       message = ''
+      rc = 0
 
-      @zmq_socket.recv_string(message)
+      rc = socket.recv_string(message)
+      if not ZMQ::Util.resultcode_ok?(rc)
+        STDERR.puts "Operation failed, errno [#{ZMQ::Util.errno}] description [#{ZMQ::Util.error_string}]"
+        caller(1).each { |callstack| STDERR.puts(callstack) }
+        return
+      end
 
+      puts "Pull: I received a message '#{message}'"
       yield message
-
-      Thread.exit
     end
   end
 

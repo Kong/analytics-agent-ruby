@@ -1,27 +1,38 @@
 class TestCapture < MiniTest::Test
 
   def setup
-    ApiAnalytics::Capture.bind_socket 'tcp://localhost:2200'
+    # Create our socket server
+    @zmq_pull = zmq_pull_socket('tcp://127.0.0.1:2200')
 
-    @zmq_ctx = ZMQ::Context.create(1)
-    @zmq_socket = @zmq_ctx.socket(ZMQ::PULL)
-    @zmq_socket.connect('tcp://127.0.0.1:2200')
+    # Connect to socket server
+    ApiAnalytics::Capture.connect('tcp://127.0.0.2:2200')
   end
 
   def teardown
-    ApiAnalytics::Capture.destroy_socket
-
-    @zmq_socket.close
-    @zmq_ctx.terminate
+    ApiAnalytics::Capture.disconnect
+    @zmq_pull.close
   end
 
-  should 'create bound socket' do
-    assert ApiAnalytics::Capture.socket != nil
-  end
-
-  # should 'send ALF' do
-  #   fakeEntry = 'test'
-  #   ApiAnalytics::Capture.record! fakeEntry
+  # should 'create bound socket' do
+  #   assert ApiAnalytics::Capture.socket != nil
   # end
+
+  should 'send ALF' do
+    message = ''
+
+    zmq_pull_once @zmq_pull do |msg|
+      print "socket recv: #{msg}"
+      message = msg
+    end
+
+    fakeEntry = ApiAnalytics::Message::Entry.new
+    ApiAnalytics::Capture.record! fakeEntry
+
+    sleep 0.01
+
+    puts "test recv: #{message}"
+
+    assert_equal '{}', message
+  end
 
 end

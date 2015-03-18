@@ -1,32 +1,64 @@
 module ApiAnalytics
 	class Capture
     @zmq_ctx = nil
-    @zmq_socket = nil
+    @zmq_push = nil
 
-    def self.bind_socket(host='tcp://socket.apianalytics.com:5000')
-      @zmq_ctx = ZMQ::Context.create(1)
-      @zmq_socket = @zmq_ctx.socket(ZMQ::PUSH)
-      @zmq_socket.bind(host)
+    def self.error_check(rc)
+      if ZMQ::Util.resultcode_ok?(rc)
+        return true
+      else
+        STDERR.puts "Operation failed, errno [#{ZMQ::Util.errno}] description [#{ZMQ::Util.error_string}]"
+        caller(1).each { |callstack| STDERR.puts(callstack) }
+        return false
+      end
     end
 
-    def self.record!(entry)
-      if @zmq_socket == nil
-        bind_socket!
+    def self.connect(host='tcp://socket.apianalytics.com:5000')
+      @zmq_ctx = ZMQ::Context.create(1)
+      @zmq_push = @zmq_ctx.socket(ZMQ::PUSH)
+      @zmq_push.setsockopt(ZMQ::LINGER, 0)
+      rc = @zmq_push.connect(host)
+
+      error_check(rc)
+    end
+
+    ##
+    # send as necessary
+    ##
+    def self.record(entry)
+      if @zmq_push == nil
+        connect
       end
 
-      @zmq_socket.send_string 'test'
+      # TODO buffer entries
     end
 
-    def self.destroy_socket
-      @zmq_socket.close
-      @zmq_ctx.terminate
+    ##
+    # send immediately
+    ##
+    def self.record!(entry)
+      if @zmq_push == nil
+        connect
+      end
 
-      @zmq_socket = nil
-      @zmq_ctx = nil
+      rc = @zmq_push.send_string entry.to_string
+      error_check(rc)
+    end
+
+    def self.disconnect
+      if @zmq_push != nil
+        @zmq_push.close
+        @zmq_push = nil
+      end
+
+      if @zmq_ctx != nil
+        @zmq_ctx.terminate
+        @zmq_ctx = nil
+      end
     end
 
     def self.socket
-      @zmq_socket || nil
+      @zmq_push || nil
     end
 
   end

@@ -1,65 +1,55 @@
 gem 'sinatra'
 require 'sinatra'
 require 'helper'
-require 'apianalytics/sinatra'
+require 'apianalytics/frameworks/sinatra'
 require 'rack'
 
 class TestSinatra < MiniTest::Test
 
-  def setup
-    @zmq_ctx = ZMQ::Context.create(1)
-    @zmq_socket = @zmq_ctx.socket(ZMQ::PULL)
-    @zmq_socket.connect('tcp://127.0.0.1:2200')
-  end
-
-  def teardown
-    @zmq_socket.close
-    @zmq_ctx.terminate
-  end
-
+  # Test Sinatra App
   class TestApp < Sinatra::Base
-    extend ApiAnalytics::Sinatra
+    extend ApiAnalytics::Frameworks::Sinatra
 
-    apianalytics! 'MY-API-KEY', host: 'localhost:2200'
+    apianalytics! 'MY-API-KEY', host: '127.0.0.1:2200'
 
     get('/') { 'Test Endpoint' }
   end
 
-  # def test_should_send_alf
+  def setup
+    # Create our socket server
+    @zmq_ctx = zmq_context
+    @zmq_pull = zmq_pull_socket(@zmq_ctx, 'tcp://127.0.0.1:2200')
+
+    # Connect to socket server
+    ApiAnalytics::Capture.connect('tcp://127.0.0.2:2200')
+  end
+
+  def teardown
+    ApiAnalytics::Capture.disconnect
+    @zmq_pull.close
+    @zmq_ctx.terminate
+  end
+
+  # should 'send ALF on request' do
   #   results = false
-
-  #   zmq_pull_once @zmq_socket do |message|
-  #     print message
-  #     assert message
-  #   end
-
-  #   sleep 0.1
 
   #   request = Rack::MockRequest.new(TestApp)
   #   response = request.get('/')
 
+  #   sleep 1
+  #   zmq_pull_once @zmq_pull do |message|
+  #     print message
+  #     assert message
+  #     results = true
+  #   end
+
+
+
   #   if results
-  #     print 'did we get here?'
+  #     print 'SUCCESS!'
   #   else
-  #     flunk 'Did not get ALF'
+  #     print 'FAILURE!'
   #   end
-  # end
-
-
-  # describe 'sinatra' do
-
-  #   before :suite do
-  #     print 'before sinatra'
-  #   end
-
-  #   should 'test sinatra' do
-  #     flunk "hey buddy, you should probably rename this file and start testing for real"
-  #   end
-
-  #   should 'test sinatra again' do
-  #     flunk "hey buddy, you should probably rename this file and start testing for real"
-  #   end
-
   # end
 
 end

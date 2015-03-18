@@ -1,8 +1,5 @@
-require 'apianalytics/sinatra'
-
-# == Rails Hook ============================================================
-
-if (defined?(Rails))
-  print 'loaded rails'
-  require 'apianalytics/rails'
+module ApiAnalytics
 end
+
+require 'apianalytics/message'
+require 'apianalytics/frameworks'
