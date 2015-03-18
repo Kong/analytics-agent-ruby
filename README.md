@@ -25,8 +25,7 @@ Within your `ApplicationController` add a before and after filter.
 
 ```ruby
 class ApplicationController < ActionController:Base
-  before_filter ApiAnalytics.before
-  after_filter ApiAnalytics.after
+  after_filter apianalytics_after, 'MY-API-KEY'
 
   # ... the rest of your code ...
 end

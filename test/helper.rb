@@ -1,4 +1,11 @@
+require 'ffi-rzmq'
+require 'rack'
+
 require 'simplecov'
+
+gem 'minitest'
+require 'minitest/autorun'
+require 'minitest/unit'
 
 module SimpleCov::Configuration
   def clean_filters
@@ -23,12 +30,25 @@ rescue Bundler::BundlerError => e
   $stderr.puts "Run `bundle install` to install missing gems"
   exit e.status_code
 end
-require 'test/unit'
+# require 'test/unit'
 require 'shoulda'
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'apianalytics'
 
-class Test::Unit::TestCase
+class MiniTest::Test
+
+  def zmq_pull_once(socket)
+    Thread.new do
+      message = ''
+
+      @zmq_socket.recv_string(message)
+
+      yield message
+
+      Thread.exit
+    end
+  end
+
 end
