@@ -67,7 +67,6 @@ class MiniTest::Test
         return
       end
 
-      puts "Pull: I received a message '#{message}'"
       yield message
     end
   end
