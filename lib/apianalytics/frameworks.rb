@@ -1,4 +1,10 @@
-require 'apianalytics/frameworks/sinatra'
+puts 'hooks'
+
+# == Sinatra Hook ============================================================
+if (defined?(Sinatra))
+  print 'loaded sinatra'
+  require 'apianalytics/frameworks/sinatra'
+end
 
 # == Rails Hook ============================================================
 

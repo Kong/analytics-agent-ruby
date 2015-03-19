@@ -25,7 +25,7 @@ module ApiAnalytics
     ##
     # send as necessary
     ##
-    def self.record(entry)
+    def self.record(alf)
       if @zmq_push == nil
         connect
       end
@@ -36,12 +36,12 @@ module ApiAnalytics
     ##
     # send immediately
     ##
-    def self.record!(entry)
+    def self.record!(alf)
       if @zmq_push == nil
         connect
       end
 
-      rc = @zmq_push.send_string entry.to_string
+      rc = @zmq_push.send_string alf.to_string
       error_check(rc)
     end
 

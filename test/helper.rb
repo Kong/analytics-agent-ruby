@@ -64,7 +64,7 @@ class MiniTest::Test
       if not ZMQ::Util.resultcode_ok?(rc)
         STDERR.puts "Operation failed, errno [#{ZMQ::Util.errno}] description [#{ZMQ::Util.error_string}]"
         caller(1).each { |callstack| STDERR.puts(callstack) }
-        return
+        Thread.exit
       end
 
       yield message

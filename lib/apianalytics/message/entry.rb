@@ -1,12 +1,9 @@
 module ApiAnalytics::Message
   class Entry
+    attr_accessor :serverIpAddress, :clientIpAddress, :time
 
-    def to_string
-      '{}'
+    def initialize(startedDateTime, request, response, timings)
     end
 
-    def to_s
-      to_string
-    end
   end
 end

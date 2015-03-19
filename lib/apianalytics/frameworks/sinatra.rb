@@ -1,4 +1,6 @@
+require 'sinatra/base'
 require 'apianalytics/capture'
+require 'time'
 
 module ApiAnalytics::Frameworks
   module Sinatra
@@ -7,14 +9,16 @@ module ApiAnalytics::Frameworks
       ApiAnalytics::Capture.connect('tcp://' + host)
 
       before do
+        @startedDateTime = Time.now.iso8601
+        # request.startedDateTime = Time.now.iso8601
         # print 'before'
         # puts request
       end
 
       after do
-        # print 'after'
+        puts @startedDateTime
         # puts response
-        entry = ApiAnalytics::Message::Entry.new
+        entry = ApiAnalytics::Message::Alf.new
         ApiAnalytics::Capture.record! entry
       end
     end

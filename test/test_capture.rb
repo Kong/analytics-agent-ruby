@@ -1,3 +1,5 @@
+require 'helper'
+
 class TestCapture < MiniTest::Test
   @@host = 'tcp://127.0.0.1:2200'
 
@@ -25,7 +27,9 @@ class TestCapture < MiniTest::Test
       message = msg
     end
 
-    fakeEntry = ApiAnalytics::Message::Entry.new
+    sleep 0.05
+
+    fakeEntry = ApiAnalytics::Message::Alf.new
     ApiAnalytics::Capture.record! fakeEntry
 
     sleep 0.05
