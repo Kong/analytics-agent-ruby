@@ -14,6 +14,7 @@ module ApiAnalytics
     end
 
     def self.connect(host='tcp://socket.apianalytics.com:5000')
+      return if @zmq_push != nil
       @zmq_push = @@zmq_ctx.socket(ZMQ::PUSH)
       @zmq_push.setsockopt(ZMQ::LINGER, 0)
       rc = @zmq_push.connect(host)

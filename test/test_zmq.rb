@@ -34,7 +34,7 @@ class TestZmq < MiniTest::Test
       caller(1).each { |callstack| STDERR.puts(callstack) }
     end
 
-    sleep 0.01
+    sleep 0.05
 
     assert_equal 'test', message
   end

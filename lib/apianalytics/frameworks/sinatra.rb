@@ -4,6 +4,8 @@ module ApiAnalytics::Frameworks
   module Sinatra
 
     def apianalytics!(api_key, host='socket.apianalytics.com:5000')
+      ApiAnalytics::Capture.connect('tcp://' + host)
+
       before do
         # print 'before'
         # puts request

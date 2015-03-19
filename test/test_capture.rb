@@ -14,9 +14,9 @@ class TestCapture < MiniTest::Test
     @zmq_pull.close
   end
 
-  # should 'create bound socket' do
-  #   assert ApiAnalytics::Capture.socket != nil
-  # end
+  should 'create bound socket' do
+    assert ApiAnalytics::Capture.socket != nil
+  end
 
   should 'send ALF' do
     message = ''
@@ -28,7 +28,7 @@ class TestCapture < MiniTest::Test
     fakeEntry = ApiAnalytics::Message::Entry.new
     ApiAnalytics::Capture.record! fakeEntry
 
-    sleep 0.01
+    sleep 0.05
 
     assert_equal '{}', message
   end
