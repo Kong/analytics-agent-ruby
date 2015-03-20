@@ -1,4 +1,5 @@
 require 'helper'
+require 'json'
 
 class TestCapture < MiniTest::Test
 
@@ -20,12 +21,14 @@ class TestCapture < MiniTest::Test
   end
 
   should 'send ALF' do
-    alf = ApiAnalytics::Message::Alf.new
+    alf = ApiAnalytics::Message::Alf.new 'SERVICE-TOKEN'
     ApiAnalytics::Capture.record! alf
 
     message = @zmq_pull.recv
 
-    assert_equal '{}', message
+    alf = JSON.parse(message)
+
+    assert_ruby_agent alf
   end
 
 end

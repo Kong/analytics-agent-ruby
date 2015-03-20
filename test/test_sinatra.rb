@@ -2,6 +2,7 @@ require 'sinatra'
 require 'helper'
 require 'apianalytics/frameworks/sinatra'
 require 'rack'
+require 'json'
 
 class TestSinatra < MiniTest::Test
   @zmq_pull = nil
@@ -33,8 +34,9 @@ class TestSinatra < MiniTest::Test
     response = request.get('/')
 
     message = @zmq_pull.recv
+    alf = JSON.parse(message)
 
-    assert message
+    assert_ruby_agent alf
   end
 
 end

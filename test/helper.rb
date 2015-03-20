@@ -47,4 +47,8 @@ class MiniTest::Test
     return pull_socket
   end
 
+  def assert_ruby_agent(alf_json)
+    assert_equal 'Ruby Agent', alf_json['har']['log']['creator']['name']
+  end
+
 end
