@@ -1,7 +1,6 @@
 require 'helper'
 
 class TestCapture < MiniTest::Test
-  @@host = 'tcp://127.0.0.1:2200'
 
   def setup
     # Create our socket server
@@ -21,18 +20,10 @@ class TestCapture < MiniTest::Test
   end
 
   should 'send ALF' do
-    message = ''
+    alf = ApiAnalytics::Message::Alf.new
+    ApiAnalytics::Capture.record! alf
 
-    zmq_pull_once @zmq_pull do |msg|
-      message = msg
-    end
-
-    sleep 0.05
-
-    fakeEntry = ApiAnalytics::Message::Alf.new
-    ApiAnalytics::Capture.record! fakeEntry
-
-    sleep 0.05
+    message = @zmq_pull.recv
 
     assert_equal '{}', message
   end

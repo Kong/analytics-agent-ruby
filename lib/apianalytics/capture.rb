@@ -1,25 +1,12 @@
 module ApiAnalytics
 	class Capture
-    @@zmq_ctx = ZMQ::Context.create(1)
+    @@zmq_ctx = ZMQ::Context.new
     @zmq_push = nil
-
-    def self.error_check(rc)
-      if ZMQ::Util.resultcode_ok?(rc)
-        return true
-      else
-        STDERR.puts "Operation failed, errno [#{ZMQ::Util.errno}] description [#{ZMQ::Util.error_string}]"
-        caller(1).each { |callstack| STDERR.puts(callstack) }
-        return false
-      end
-    end
 
     def self.connect(host='tcp://socket.apianalytics.com:5000')
       return if @zmq_push != nil
-      @zmq_push = @@zmq_ctx.socket(ZMQ::PUSH)
-      @zmq_push.setsockopt(ZMQ::LINGER, 0)
+      @zmq_push = @@zmq_ctx.socket(:PUSH)
       rc = @zmq_push.connect(host)
-
-      error_check(rc)
     end
 
     ##
@@ -41,8 +28,7 @@ module ApiAnalytics
         connect
       end
 
-      rc = @zmq_push.send_string alf.to_string
-      error_check(rc)
+      @zmq_push.send alf.to_string
     end
 
     def self.disconnect
@@ -54,6 +40,10 @@ module ApiAnalytics
 
     def self.socket
       @zmq_push || nil
+    end
+
+    def self.context
+      @@zmq_ctx
     end
 
   end

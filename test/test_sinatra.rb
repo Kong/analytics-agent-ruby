@@ -28,21 +28,13 @@ class TestSinatra < MiniTest::Test
     @zmq_pull.close if @zmq_pull != nil
   end
 
-  # should 'send ALF on request' do
-  #   results = false
+  should 'send ALF on request' do
+    request = Rack::MockRequest.new(TestApp)
+    response = request.get('/')
 
-  #   zmq_pull_once @zmq_pull do |message|
-  #     results = true
-  #   end
+    message = @zmq_pull.recv
 
-  #   sleep 0.05
-
-  #   request = Rack::MockRequest.new(TestApp)
-  #   response = request.get('/')
-
-  #   sleep 0.05
-
-  #   assert results
-  # end
+    assert message
+  end
 
 end

@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'ffi-rzmq'
+gem 'rbczmq', '>= 1.7.8'
 
 group :development do
   gem 'minitest', '>= 5.5'
