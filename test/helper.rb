@@ -51,4 +51,14 @@ class MiniTest::Test
     assert_equal 'Ruby Agent', alf_json['har']['log']['creator']['name']
   end
 
+  def assert_entry_request(entry_json, method, url)
+    assert_equal method, entry_json['request']['method']
+    assert_equal url, entry_json['request']['url']
+  end
+
+  def assert_entry_response(entry_json, status, bodySize)
+    assert_equal status, entry_json['response']['status']
+    assert_equal bodySize, entry_json['response']['bodySize']
+  end
+
 end
