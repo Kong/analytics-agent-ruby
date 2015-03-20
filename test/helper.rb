@@ -46,26 +46,27 @@ class MiniTest::Test
     pull_socket = @@zmq_context.socket(ZMQ::PULL)
     pull_socket.setsockopt(ZMQ::LINGER, 0)
     rc = pull_socket.bind(host)
+    zmq_error_check(rc)
 
+    return pull_socket
+  end
+
+  def zmq_error_check(rc)
     if not ZMQ::Util.resultcode_ok?(rc)
       STDERR.puts "Operation failed, errno [#{ZMQ::Util.errno}] description [#{ZMQ::Util.error_string}]"
       caller(1).each { |callstack| STDERR.puts(callstack) }
+      return false
     end
-
-    return pull_socket
+    true
   end
 
   def zmq_pull_once(socket)
     Thread.new do
       message = ''
-      rc = 0
 
       rc = socket.recv_string(message)
-      if not ZMQ::Util.resultcode_ok?(rc)
-        STDERR.puts "Operation failed, errno [#{ZMQ::Util.errno}] description [#{ZMQ::Util.error_string}]"
-        caller(1).each { |callstack| STDERR.puts(callstack) }
-        Thread.exit
-      end
+
+      Thread.exit unless zmq_error_check(rc)
 
       yield message
     end

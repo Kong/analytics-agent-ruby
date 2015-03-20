@@ -29,10 +29,7 @@ class TestZmq < MiniTest::Test
     end
 
     rc = @zmq_push.send_string('test')
-    if not ZMQ::Util.resultcode_ok?(rc)
-      STDERR.puts "Operation failed, errno [#{ZMQ::Util.errno}] description [#{ZMQ::Util.error_string}]"
-      caller(1).each { |callstack| STDERR.puts(callstack) }
-    end
+    assert zmq_error_check(rc)
 
     sleep 0.05
 
