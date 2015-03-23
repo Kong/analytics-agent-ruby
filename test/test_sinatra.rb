@@ -30,33 +30,33 @@ class TestSinatra < MiniTest::Test
     @zmq_pull.close if @zmq_pull != nil
   end
 
-  should 'send ALF on GET /get request' do
-    request = Rack::MockRequest.new(TestApp)
-    response = request.get('/get')
+  # should 'send ALF on GET /get?query=test request' do
+  #   request = Rack::MockRequest.new(TestApp)
+  #   response = request.get('/get?query=test')
 
-    message = @zmq_pull.recv
-    alf = JSON.parse(message)
+  #   message = @zmq_pull.recv
+  #   alf = JSON.parse(message)
 
-    assert_ruby_agent alf
+  #   assert_ruby_agent alf
 
-    entry = alf['har']['log']['entries'].first
-    assert_entry_request entry, 'GET', 'http://example.org/get'
-    assert_entry_response entry, 200, 12
-  end
+  #   entry = alf['har']['log']['entries'].first
+  #   assert_entry_request entry, 'GET', 'http://example.org/get'
+  #   assert_entry_response entry, 200, 12
+  # end
 
-  should 'send ALF on POST /post request' do
-    request = Rack::MockRequest.new(TestApp)
-    response = request.post('/post')
+  # should 'send ALF on POST /post request' do
+  #   request = Rack::MockRequest.new(TestApp)
+  #   response = request.post('/post')
 
-    message = @zmq_pull.recv
-    alf = JSON.parse(message)
+  #   message = @zmq_pull.recv
+  #   alf = JSON.parse(message)
 
-    assert_ruby_agent alf
+  #   assert_ruby_agent alf
 
-    entry = alf['har']['log']['entries'].first
-    assert_entry_request entry, 'POST', 'http://example.org/post'
-    assert_entry_response entry, 200, 13
-  end
+  #   entry = alf['har']['log']['entries'].first
+  #   assert_entry_request entry, 'POST', 'http://example.org/post'
+  #   assert_entry_response entry, 200, 13
+  # end
 
 
 end

@@ -5,16 +5,32 @@ require 'socket'
 require 'json'
 
 module ApiAnalytics::Frameworks
-  module Sinatra
+  class Rack
 
-    def apianalytics!(service_token, host='socket.apianalytics.com:5000')
+    def initialize(app, options)
+      @app = app
+      @service_token = options[:service_token]
+
+      host = options[:host] or 'socket.apianalytics.com:5000'
       ApiAnalytics::Capture.connect('tcp://' + host)
+    end
 
-      before do
-        @startedDateTime = Time.now
-      end
+    def call(env)
+      startedDateTime = Time.now
+      status, headers, body = @app.call(env)
 
-      after do
+      dup._record_alf startedDateTime, request, {
+        :status => status,
+        :headers => headers,
+        :body => body
+      }
+
+      [status, headers, body]
+    end
+
+    def _record_alf(startedDateTime, request, response)
+        time = Time.now - startedDateTime
+
         alf = ApiAnalytics::Message::Alf.new service_token
 
         entry = {
@@ -51,6 +67,15 @@ module ApiAnalytics::Frameworks
         alf.add_entry entry
 
         ApiAnalytics::Capture.record! alf
+    end
+
+    def apianalytics!(service_token, host='socket.apianalytics.com:5000')
+
+      before do
+      end
+
+      after do
+
       end
     end
 
