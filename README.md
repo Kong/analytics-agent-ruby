@@ -40,6 +40,21 @@ apianalytics! 'SERVICE-TOKEN'
 # ... the rest of your code ...
 ```
 
+
+### Rack
+
+Add the middleware.
+
+```ruby
+require 'rack'
+require 'apianalytics'
+
+use ApiAnalytics::Frameworks::Rack, service_token: 'SERVICE-TOKEN'
+
+# ... the rest of your code ...
+```
+
+
 ## Contributing to apianalytics
 
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
