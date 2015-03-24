@@ -1,16 +1,14 @@
+require 'apianalytics/frameworks/rack'
+
 module ApiAnalytics::Frameworks
   module Rails
 
-    def apianalytics!(api_key)
-      before_filter do
-        print 'before'
-        puts request
-      end
+    def initialize(app, options)
+      @rack = ApiAnalytics::Frameworks::Rack.new(app, options)
+    end
 
-      before_filter do
-        print 'after'
-        puts response
-      end
+    def call(env)
+      @rack.call(env)
     end
 
   end

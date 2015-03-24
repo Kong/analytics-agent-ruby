@@ -5,45 +5,40 @@ The ruby agent reports API traffic to [API Analytics](http://apianalytics.com).
 
 ## Quick Start
 
-1. Add the gem to your Gemfile.
+1. Add the gem to your Gemfile and install the gem
 
     ```text
     gem 'apianalytics'
-    ```
-
-2. Install the gem.
-
-    ```shell
     bundle install
     ```
 
-3. Follow the guide that tailors to your framework.
+2. Follow the guide that tailors to your framework.
 
 ### Ruby on Rails
 
-Within your `ApplicationController` add a before and after filter.
+Open your `environment.rb` file, and within the `Rails::Initializer.run` block, add the middleware as below:
 
 ```ruby
-class ApplicationController < ActionController:Base
-  after_filter apianalytics_after, 'MY-API-KEY'
-
-  # ... the rest of your code ...
+Rails::Initializer.run do |config|
+  config.middleware.use "ApiAnalytics::Frameworks::Rails", service_token: 'SERVICE-TOKEN'
 end
 ```
 
 ### Sinatra
+
+Register the middleware. Then activate it.
 
 ```ruby
 # myapp.rb
 require 'sinatra'
 require 'apianalytics'
 
-before ApiAnalytics.before
-after ApiAnalytics.after
+register ApiAnalytics::Frameworks::Sinatra
+
+apianalytics! 'SERVICE-TOKEN'
 
 # ... the rest of your code ...
 ```
-
 
 ## Contributing to apianalytics
 

@@ -1,19 +1,21 @@
 puts 'hooks'
 
-require 'apianalytics/frameworks/rack'
+# == Rack Hook =============================================================
+if (defined?(Rack))
+  require 'apianalytics/frameworks/rack'
+end
 
-# == Sinatra Hook ============================================================
+# == Sinatra Hook ==========================================================
 if (defined?(Sinatra))
-  print 'loaded sinatra'
   require 'apianalytics/frameworks/sinatra'
 end
 
 # == Rails Hook ============================================================
 
 if (defined?(Rails))
-  print 'loaded rails'
   require 'apianalytics/frameworks/rails'
 end
+
 
 module ApiAnalytics::Frameworks
 end
