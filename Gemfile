@@ -9,7 +9,7 @@ group :development do
   gem 'jeweler', '~> 2.0.1'
   gem 'simplecov', '>= 0'
 
-  gem 'byebug'  # for debugging
+  # gem 'byebug'  # for debugging
 
   gem 'rails', '>= 4.1'
   gem 'sinatra', '>= 1.4'

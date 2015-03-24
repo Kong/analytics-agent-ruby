@@ -1,5 +1,7 @@
 puts 'hooks'
 
+require 'apianalytics/frameworks/rack'
+
 # == Sinatra Hook ============================================================
 if (defined?(Sinatra))
   print 'loaded sinatra'
