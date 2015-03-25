@@ -1,3 +1,5 @@
+require 'rbczmq'
+
 module ApiAnalytics
 	class Capture
     @@zmq_ctx = ZMQ::Context.new
@@ -28,7 +30,7 @@ module ApiAnalytics
         connect
       end
 
-      @zmq_push.send alf.to_string
+      @zmq_push.send alf.to_s
     end
 
     def self.disconnect

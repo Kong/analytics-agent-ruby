@@ -1,6 +1,9 @@
 require 'sinatra'
+require 'sinatra/base'
 require 'helper'
 require 'rack'
+require 'apianalytics'
+
 
 class TestSinatra < MiniTest::Test
   @zmq_pull = nil

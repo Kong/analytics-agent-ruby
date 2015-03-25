@@ -24,6 +24,9 @@ Rails::Initializer.run do |config|
 end
 ```
 
+For Rails 4, use `application.rb` as such:
+
+
 ### Sinatra
 
 Register the middleware. Then activate it.

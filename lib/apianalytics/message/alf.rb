@@ -25,16 +25,8 @@ module ApiAnalytics::Message
       @entries << entry
     end
 
-    def set_test(rawr)
-      @test = rawr
-    end
-
-    def to_string
-      @alf.to_json
-    end
-
     def to_s
-      to_string
+      @alf.to_json
     end
   end
 end

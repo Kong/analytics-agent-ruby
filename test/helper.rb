@@ -1,5 +1,6 @@
 require 'rbczmq'
 require 'rack'
+require 'sinatra'
 
 require 'simplecov'
 

@@ -1,4 +1,3 @@
-require 'sinatra/base'
 require 'apianalytics/capture'
 require 'time'
 require 'socket'
@@ -93,7 +92,7 @@ module ApiAnalytics::Frameworks
         request: {
           method: request['REQUEST_METHOD'],
           url: url(request),
-          httpVersion: 'HTTP/1.1', # not available in sinatra, default http/1.1
+          httpVersion: 'HTTP/1.1', # not available, default http/1.1
           queryString: request_query_string(request),
           headers: request_headers(request),
           headersSize: request_header_size(request),
@@ -103,7 +102,7 @@ module ApiAnalytics::Frameworks
         response: {
           status: response[:status],
           statusText: status_code(response[:status]),
-          httpVersion: 'HTTP/1.1', # not available in sinatra, default http/1.1
+          httpVersion: 'HTTP/1.1', # not available, default http/1.1
           headers: response_headers(response),
           # headersSize:
           # content:

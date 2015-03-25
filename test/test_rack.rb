@@ -1,6 +1,5 @@
-require 'helper'
-require 'apianalytics/frameworks/rack'
 require 'rack'
+require 'helper'
 
 class TestRack < MiniTest::Test
   def app
