@@ -24,8 +24,7 @@ Rails::Initializer.run do |config|
 end
 ```
 
-For Rails 4, use `application.rb` as such:
-
+In rails 4, put the `config.middleware.use` line in the `application.rb` file.
 
 ### Sinatra
 

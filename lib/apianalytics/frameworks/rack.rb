@@ -80,6 +80,12 @@ module ApiAnalytics::Frameworks
     def response_headers_size(response)
       # HTTP/1.1 {STATUS} {STATUS_TEXT} = 10 extra characters
       first_line = response[:status] + status_code(response[:status]) + 10
+
+      # {KEY}: {VALUE}\n\r
+      header_fields = response[:headers].map { |k,v| k.length + v.bytesize + 4 }
+        .inject(0) { |sum,v| sum + v }
+
+      return first_line + header_fields
     end
 
     def record_alf(startedDateTime, request, response)
@@ -104,7 +110,7 @@ module ApiAnalytics::Frameworks
           statusText: status_code(response[:status]),
           httpVersion: 'HTTP/1.1', # not available, default http/1.1
           headers: response_headers(response),
-          # headersSize:
+          headersSize: response_headers_size(response),
           # content:
           bodySize: response[:body].inject(0) { |sum, b| sum + b.bytesize }
         },
