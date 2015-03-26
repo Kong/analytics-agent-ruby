@@ -8,7 +8,7 @@ module ApiAnalytics::Frameworks
       @service_token = options[:service_token]
       host = options[:host] || 'socket.apianalytics.com:5000'
 
-      ApiAnalytics::Capture.connect('tcp://' + host)
+      ApiAnalytics::Capture.setHost('tcp://' + host)
     end
 
     def call(env)
