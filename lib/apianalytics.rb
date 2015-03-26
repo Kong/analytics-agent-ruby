@@ -1,7 +1,3 @@
-require 'apianalytics/capture'
-require 'apianalytics/message'
-require 'apianalytics/frameworks'
-
 module ApiAnalytics
   module Message
   end
@@ -9,4 +5,10 @@ module ApiAnalytics
   module Frameworks
   end
 end
+
+
+
+require 'apianalytics/capture'
+require 'apianalytics/message'
+require 'apianalytics/frameworks'
 

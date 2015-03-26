@@ -22,9 +22,6 @@ class TestSinatra < MiniTest::Test
   def setup
     # Create our socket server
     @zmq_pull = zmq_pull_socket('tcp://127.0.0.1:2200')
-
-    # Connect to socket server
-    ApiAnalytics::Capture.connect('tcp://127.0.0.1:2200')
   end
 
   def teardown

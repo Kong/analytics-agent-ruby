@@ -1,43 +1,59 @@
+require 'apianalytics/utils'
 
 module ApiAnalytics
   class Capture
     require 'rbczmq'
+
     @@zmq_ctx = ZMQ::Context.new
     @zmq_push = nil
+    @connected = false
+    @host = 'tcp://socket.apianalytics.com:5000'
+    @thread = nil
 
-    def self.connect(host='tcp://socket.apianalytics.com:5000')
-      return if @zmq_push != nil
-      @zmq_push = @@zmq_ctx.socket(:PUSH)
-      rc = @zmq_push.connect(host)
-    end
+    @@queue = Utils::QueueWithTimeout.new
 
-    ##
-    # send as necessary
-    ##
-    def self.record(alf)
-      if @zmq_push == nil
-        connect
+    def self.start
+      @thread = Thread.new do
+        # Connect
+        @zmq_push = @@zmq_ctx.socket(:PUSH)
+        @zmq_push.connect(@host)
+        @connected = true
+
+        # Send messages
+        while @connected
+          begin
+            alf = @@queue.pop_with_timeout(1)  # 1s timeout
+            @zmq_push.send alf.to_s
+          rescue => ex
+            # TODO log debug
+          end
+          sleep 0
+        end
+
+        # Disconnect
+        @zmq_push.close
       end
-
-      # TODO buffer entries
     end
 
     ##
-    # send immediately
+    # Send immediately
     ##
     def self.record!(alf)
-      if @zmq_push == nil
-        connect
+      if not @connected
+        Capture.start
       end
 
-      @zmq_push.send alf.to_s
+      @@queue << alf
     end
 
+    ##
+    # Force disconnect
+    ##
     def self.disconnect
-      if @zmq_push != nil
-        @zmq_push.close
-        @zmq_push = nil
-      end
+      return unless @connected
+
+      @connected = false
+      @thread.join
     end
 
     def self.socket
@@ -46,6 +62,10 @@ module ApiAnalytics
 
     def self.context
       @@zmq_ctx
+    end
+
+    def self.setHost(host)
+      @host = host
     end
 
   end
