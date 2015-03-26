@@ -1,7 +1,7 @@
 require 'apianalytics/frameworks/rack'
 
 module ApiAnalytics::Frameworks
-  module Rails
+  class Rails
 
     def initialize(app, options)
       @rack = ApiAnalytics::Frameworks::Rack.new(app, options)
