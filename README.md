@@ -16,15 +16,17 @@ The ruby agent reports API traffic to [API Analytics](http://apianalytics.com).
 
 ### Ruby on Rails
 
-Open your `environment.rb` file, and within the `Rails::Initializer.run` block, add the middleware as below:
+Open your `config/environment.rb` file, and within the `Rails::Initializer.run` block, add the middleware as below:
 
 ```ruby
+require 'apianalytics'
+
 Rails::Initializer.run do |config|
-  config.middleware.use "ApiAnalytics::Frameworks::Rails", service_token: 'SERVICE_TOKEN'
+  config.middleware.use ApiAnalytics::Frameworks::Rails, service_token: 'SERVICE_TOKEN'
 end
 ```
 
-In rails 4, put the `config.middleware.use` line in the `application.rb` file.
+In rails 4, put the `config.middleware.use` line in the `config/application.rb` file.
 
 ### Sinatra
 
