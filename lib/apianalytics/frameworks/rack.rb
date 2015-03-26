@@ -30,10 +30,10 @@ module ApiAnalytics::Frameworks
 
       if body.respond_to? :to_str
         body = [body.to_str]
-      elsif body.respond_to?(:each)
-        # do nothing
       elsif body.respond_to?(:body)
         body = [body.body]
+      elsif body.respond_to?(:each)
+        # do nothing
       else
         raise TypeError, "stringable or iterable required"
       end
