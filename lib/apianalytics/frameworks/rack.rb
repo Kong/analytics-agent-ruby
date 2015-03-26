@@ -28,6 +28,16 @@ module ApiAnalytics::Frameworks
       startedDateTime = Time.now
       status, headers, body = @app.call(env)
 
+      if body.respond_to? :to_str
+        body = [body.to_str]
+      elsif body.respond_to?(:each)
+        # do nothing
+      elsif body.respond_to?(:body)
+        body = [body.body]
+      else
+        raise TypeError, "stringable or iterable required"
+      end
+
       record_entry startedDateTime, env, {
         :status => status,
         :headers => header_hash(headers),
