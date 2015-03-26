@@ -79,7 +79,7 @@ module ApiAnalytics::Frameworks
 
     def response_headers_size(response)
       # HTTP/1.1 {STATUS} {STATUS_TEXT} = 10 extra characters
-      first_line = response[:status] + status_code(response[:status]) + 10
+      first_line = response[:status].to_s.length + status_code(response[:status]).length + 10
 
       # {KEY}: {VALUE}\n\r
       header_fields = response[:headers].map { |k,v| k.length + v.bytesize + 4 }
