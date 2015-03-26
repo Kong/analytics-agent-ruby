@@ -7,7 +7,8 @@ require 'json'
 module ApiAnalytics::Frameworks
   module Sinatra
 
-    def apianalytics!(service_token, host='socket.apianalytics.com:5000')
+    def apianalytics!(service_token, options = {})
+      host = options[:host] || 'socket.apianalytics.com:5000'
       use ApiAnalytics::Frameworks::Rack, service_token: service_token, host: host
     end
 

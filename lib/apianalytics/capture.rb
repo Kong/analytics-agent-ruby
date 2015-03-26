@@ -7,16 +7,20 @@ module ApiAnalytics
     @@zmq_ctx = ZMQ::Context.new
     @zmq_push = nil
     @connected = false
-    @host = 'tcp://socket.apianalytics.com:5000'
+    @options = {
+      host: 'tcp://socket.apianalytics.com:5000'
+    }
     @thread = nil
 
     @@queue = Utils::QueueWithTimeout.new
 
     def self.start
+      return unless @thread == nil
+
       @thread = Thread.new do
         # Connect
         @zmq_push = @@zmq_ctx.socket(:PUSH)
-        @zmq_push.connect(@host)
+        @zmq_push.connect(@options[:host])
         @connected = true
 
         # Send messages
@@ -26,12 +30,17 @@ module ApiAnalytics
             @zmq_push.send alf.to_s
           rescue => ex
             # TODO log debug
+            # puts 'timeout'
           end
-          sleep 0
         end
 
         # Disconnect
         @zmq_push.close
+
+        # Clean up
+        @zmq_push = nil
+        @connected = false
+        @thread = nil
       end
     end
 
@@ -56,16 +65,12 @@ module ApiAnalytics
       @thread.join
     end
 
-    def self.socket
-      @zmq_push || nil
-    end
-
     def self.context
       @@zmq_ctx
     end
 
-    def self.setHost(host)
-      @host = host
+    def self.setOptions(options)
+      @options.merge! options
     end
 
   end

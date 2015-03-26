@@ -11,12 +11,12 @@ end
 module ApiAnalytics::Frameworks
   class Rack
 
-    def initialize(app, options)
+    def initialize(app, options = {})
       @app = app
       @service_token = options[:service_token]
       host = options[:host] || 'socket.apianalytics.com:5000'
 
-      ApiAnalytics::Capture.setHost('tcp://' + host)
+      ApiAnalytics::Capture.setOptions(host: 'tcp://' + host, send_body: options[:send_body])
     end
 
     def call(env)
@@ -103,7 +103,7 @@ module ApiAnalytics::Frameworks
           queryString: request_query_string(request),
           headers: request_headers(request),
           headersSize: request_header_size(request),
-          # # content:
+          # content:
           bodySize: request['CONTENT_LENGTH'].to_i
         },
         response: {

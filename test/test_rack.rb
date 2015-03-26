@@ -18,7 +18,7 @@ class TestRack < MiniTest::Test
 
   def teardown
     ApiAnalytics::Capture.disconnect
-    @zmq_pull.close if @zmq_pull != nil
+    @zmq_pull.close
   end
 
   should 'send ALF on GET /get?foo=bar&empty request' do
@@ -35,7 +35,7 @@ class TestRack < MiniTest::Test
   end
 
   should 'send ALF on POST /post request' do
-    response = app().post('/post', {'HTTP_ACCEPT' => 'application/json', input: 'test POST body'})
+    response = app.post('/post', {'HTTP_ACCEPT' => 'application/json', input: 'test POST body'})
 
     message = @zmq_pull.recv
     alf = JSON.parse(message)

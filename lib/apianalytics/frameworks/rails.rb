@@ -3,12 +3,12 @@ require 'apianalytics/frameworks/rack'
 module ApiAnalytics::Frameworks
   class Rails < Rack
 
-    def initialize(app, options)
+    def initialize(app, options = {})
       @app = app
       @service_token = options[:service_token]
       host = options[:host] || 'socket.apianalytics.com:5000'
 
-      ApiAnalytics::Capture.setHost('tcp://' + host)
+      ApiAnalytics::Capture.setOptions(host: 'tcp://' + host, send_body: options[:send_body])
     end
 
     def call(env)

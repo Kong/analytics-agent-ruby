@@ -12,7 +12,7 @@ class TestSinatra < MiniTest::Test
     Sinatra.new do
       register ApiAnalytics::Frameworks::Sinatra
 
-      apianalytics! 'MY-API-KEY', '127.0.0.1:2200'
+      apianalytics! 'MY-API-KEY', host: '127.0.0.1:2200', send_body: true
 
       get('/get') { 'GET Endpoint' }
       post('/post') { 'POST Endpoint' }

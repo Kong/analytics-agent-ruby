@@ -18,7 +18,6 @@ class TestCapture < MiniTest::Test
     ApiAnalytics::Capture.record! alf
 
     message = @zmq_pull.recv
-
     alf = JSON.parse(message)
 
     assert_ruby_agent alf

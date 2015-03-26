@@ -41,7 +41,7 @@ require 'apianalytics'
 class MiniTest::Test
   @@host = 'tcp://127.0.0.1:2200'
 
-  ApiAnalytics::Capture.setHost(@@host) # Set default host
+  ApiAnalytics::Capture.setOptions(host: @@host) # Set default host
 
   def zmq_pull_socket(host)
     pull_socket = ApiAnalytics::Capture.context.socket(:PULL)
