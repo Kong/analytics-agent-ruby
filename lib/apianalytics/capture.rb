@@ -1,7 +1,7 @@
-require 'rbczmq'
 
 module ApiAnalytics
-	class Capture
+  class Capture
+    require 'rbczmq'
     @@zmq_ctx = ZMQ::Context.new
     @zmq_push = nil
 
