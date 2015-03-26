@@ -18,7 +18,7 @@ module ApiAnalytics::Frameworks
       record_alf @service_token, startedDateTime, env, {
         :status => status,
         :headers => headers,
-        :body => body.body()
+        :body => [body.body()]
       }
 
       [status, headers, body]
