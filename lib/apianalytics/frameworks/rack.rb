@@ -22,7 +22,7 @@ module ApiAnalytics::Frameworks
       startedDateTime = Time.now
       status, headers, body = @app.call(env)
 
-      record_alf startedDateTime, env, {
+      record_alf @service_token, startedDateTime, env, {
         :status => status,
         :headers => headers,
         :body => body
@@ -88,9 +88,9 @@ module ApiAnalytics::Frameworks
       return first_line + header_fields
     end
 
-    def record_alf(startedDateTime, request, response)
+    def record_alf(service_token, startedDateTime, request, response)
       time = Time.now - startedDateTime
-      alf = ApiAnalytics::Message::Alf.new @service_token
+      alf = ApiAnalytics::Message::Alf.new service_token
 
       entry = {
         startedDateTime: startedDateTime.iso8601,
