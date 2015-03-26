@@ -30,7 +30,6 @@ module ApiAnalytics
             @zmq_push.send alf.to_s
           rescue => ex
             # TODO log debug
-            # puts 'timeout'
           end
         end
 

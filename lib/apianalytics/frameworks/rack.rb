@@ -8,24 +8,29 @@ def status_code(status)
   Rack::Utils::HTTP_STATUS_CODES[status] || ''
 end
 
+def header_hash(headers)
+  Rack::Utils::HeaderHash.new.merge(headers)
+end
+
 module ApiAnalytics::Frameworks
   class Rack
 
     def initialize(app, options = {})
       @app = app
       @service_token = options[:service_token]
+      @send_body = options[:send_body] || false
       host = options[:host] || 'socket.apianalytics.com:5000'
 
-      ApiAnalytics::Capture.setOptions(host: 'tcp://' + host, send_body: options[:send_body])
+      ApiAnalytics::Capture.setOptions(host: 'tcp://' + host)
     end
 
     def call(env)
       startedDateTime = Time.now
       status, headers, body = @app.call(env)
 
-      record_alf @service_token, startedDateTime, env, {
+      record_entry startedDateTime, env, {
         :status => status,
-        :headers => headers,
+        :headers => header_hash(headers),
         :body => body
       }
 
@@ -74,6 +79,14 @@ module ApiAnalytics::Frameworks
         end
     end
 
+    def request_content_size(request)
+      if request['HTTP_CONTENT_LENGTH']
+        request['HTTP_CONTENT_LENGTH'].to_i
+      else
+        request['rack.input'].size
+      end
+    end
+
     def response_headers(response)
       response[:headers].map { |k,v| {name: k, value: v} }
     end
@@ -89,9 +102,23 @@ module ApiAnalytics::Frameworks
       return first_line + header_fields
     end
 
-    def record_alf(service_token, startedDateTime, request, response)
+    def response_content_size(response)
+      if response[:headers]['Content-Length']
+        response[:headers]['Content-Length'].to_i
+      else
+        response[:body].inject(0) { |sum, b| sum + b.bytesize }
+      end
+    end
+
+    def record_entry(startedDateTime, request, response)
       time = Time.now - startedDateTime
-      alf = ApiAnalytics::Message::Alf.new service_token
+      alf = ApiAnalytics::Message::Alf.new @service_token
+
+      req_headers_size = request_header_size(request)
+      req_content_size = request_content_size(request)
+
+      res_headers_size = response_headers_size(response)
+      res_content_size = response_content_size(response)
 
       entry = {
         startedDateTime: startedDateTime.iso8601,
@@ -102,18 +129,24 @@ module ApiAnalytics::Frameworks
           httpVersion: 'HTTP/1.1', # not available, default http/1.1
           queryString: request_query_string(request),
           headers: request_headers(request),
-          headersSize: request_header_size(request),
-          # content:
-          bodySize: request['CONTENT_LENGTH'].to_i
+          headersSize: req_headers_size,
+          content: {
+            size: req_content_size,
+            mimeType: request['HTTP_CONTENT_TYPE'] || 'application/octet-stream'
+          },
+          bodySize: req_headers_size + req_content_size
         },
         response: {
           status: response[:status],
           statusText: status_code(response[:status]),
           httpVersion: 'HTTP/1.1', # not available, default http/1.1
           headers: response_headers(response),
-          headersSize: response_headers_size(response),
-          # content:
-          bodySize: response[:body].inject(0) { |sum, b| sum + b.bytesize }
+          headersSize: res_headers_size,
+          content: {
+            size: res_content_size,
+            mimeType: response[:headers]['Content-Type'] || 'application/octet-stream'
+          },
+          bodySize: res_headers_size + res_content_size
         },
         timings: {
           send: 0,
@@ -121,6 +154,16 @@ module ApiAnalytics::Frameworks
           receive: 0,
         }
       }
+
+      if @send_body
+        require 'base64'
+        entry[:request][:content][:encoding] = 'base64'
+        request['rack.input'].rewind
+        entry[:request][:content][:text] = Base64.strict_encode64(request['rack.input'].read)
+
+        entry[:response][:content][:encoding] = 'base64'
+        entry[:response][:content][:text] = Base64.strict_encode64(response[:body].join())
+      end
 
       alf.add_entry entry
       ApiAnalytics::Capture.record! alf

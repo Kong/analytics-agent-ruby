@@ -59,9 +59,19 @@ class MiniTest::Test
     assert_equal url, entry_json['request']['url']
   end
 
+  def assert_entry_request_content(entry_json, encoding, text)
+    assert_equal encoding, entry_json['request']['content']['encoding']
+    assert_equal text, entry_json['request']['content']['text']
+  end
+
   def assert_entry_response(entry_json, status, bodySize)
     assert_equal status, entry_json['response']['status']
     assert_equal bodySize, entry_json['response']['bodySize']
+  end
+
+  def assert_entry_response_content(entry_json, encoding, text)
+    assert_equal encoding, entry_json['response']['content']['encoding']
+    assert_equal text, entry_json['response']['content']['text']
   end
 
 end

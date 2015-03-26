@@ -9,7 +9,8 @@ module ApiAnalytics::Frameworks
 
     def apianalytics!(service_token, options = {})
       host = options[:host] || 'socket.apianalytics.com:5000'
-      use ApiAnalytics::Frameworks::Rack, service_token: service_token, host: host
+      send_body = options[:send_body] || false
+      use ApiAnalytics::Frameworks::Rack, service_token: service_token, host: host, send_body: send_body
     end
 
   end

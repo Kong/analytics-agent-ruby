@@ -40,7 +40,7 @@ class TestSinatra < MiniTest::Test
 
     entry = alf['har']['log']['entries'].first
     assert_entry_request entry, 'GET', 'http://example.org/get'
-    assert_entry_response entry, 200, 12
+    assert_entry_response entry, 200, 86
   end
 
   should 'send ALF on POST /post request' do
@@ -54,7 +54,7 @@ class TestSinatra < MiniTest::Test
 
     entry = alf['har']['log']['entries'].first
     assert_entry_request entry, 'POST', 'http://example.org/post'
-    assert_entry_response entry, 200, 13
+    assert_entry_response entry, 200, 87
   end
 
 
