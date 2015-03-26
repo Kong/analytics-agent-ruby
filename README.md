@@ -20,7 +20,7 @@ Open your `environment.rb` file, and within the `Rails::Initializer.run` block, 
 
 ```ruby
 Rails::Initializer.run do |config|
-  config.middleware.use "ApiAnalytics::Frameworks::Rails", service_token: 'SERVICE-TOKEN'
+  config.middleware.use "ApiAnalytics::Frameworks::Rails", service_token: 'SERVICE_TOKEN'
 end
 ```
 
@@ -37,7 +37,7 @@ require 'apianalytics'
 
 register ApiAnalytics::Frameworks::Sinatra
 
-apianalytics! 'SERVICE-TOKEN'
+apianalytics! 'SERVICE_TOKEN'
 
 # ... the rest of your code ...
 ```
@@ -51,7 +51,7 @@ Add the middleware.
 require 'rack'
 require 'apianalytics'
 
-use ApiAnalytics::Frameworks::Rack, service_token: 'SERVICE-TOKEN'
+use ApiAnalytics::Frameworks::Rack, service_token: 'SERVICE_TOKEN'
 
 # ... the rest of your code ...
 ```
