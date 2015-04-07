@@ -61,8 +61,6 @@ module ApiAnalytics::Frameworks
       query_string = ''
       if request['QUERY_STRING'] != '' and request['QUERY_STRING'] != nil
         query_string = '?' + request['QUERY_STRING']
-      else
-        query_string = ''
       end
 
       "#{request['PATH_INFO']}#{query_string}"
