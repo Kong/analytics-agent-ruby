@@ -39,7 +39,7 @@ class TestSinatra < MiniTest::Test
     assert_ruby_agent alf
 
     entry = alf['har']['log']['entries'].first
-    assert_entry_request entry, 'GET', 'http://example.org/get'
+    assert_entry_request entry, 'GET', 'http://example.org/get?query=test'
     assert_entry_response entry, 200, 86
   end
 

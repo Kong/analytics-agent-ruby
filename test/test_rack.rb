@@ -33,7 +33,7 @@ class TestRack < MiniTest::Test
     assert_ruby_agent alf
 
     entry = alf['har']['log']['entries'].first
-    assert_entry_request entry, 'GET', 'http://example.org/get'
+    assert_entry_request entry, 'GET', 'http://example.org/get?foo=bar&empty'
     assert_entry_response entry, 200, 76
   end
 

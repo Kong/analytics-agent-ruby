@@ -57,9 +57,19 @@ module ApiAnalytics::Frameworks
       end
     end
 
-
     def url(request)
-      "#{request['rack.url_scheme']}://#{host(request)}#{request['PATH_INFO']}"
+      query_string = ''
+      if request['QUERY_STRING'] != '' and request['QUERY_STRING'] != nil
+        query_string = '?' + request['QUERY_STRING']
+      else
+        query_string = ''
+      end
+
+      "#{request['PATH_INFO']}#{query_string}"
+    end
+
+    def absolute_url(request)
+      "#{request['rack.url_scheme']}://#{host(request)}#{url(request)}"
     end
 
     def request_headers(request)
@@ -135,7 +145,7 @@ module ApiAnalytics::Frameworks
         serverIpAddress: Socket.ip_address_list.detect{|intf| intf.ipv4_private?}.ip_address,
         request: {
           method: request['REQUEST_METHOD'],
-          url: url(request),
+          url: absolute_url(request),
           httpVersion: 'HTTP/1.1', # not available, default http/1.1
           queryString: request_query_string(request),
           headers: request_headers(request),
