@@ -10,10 +10,10 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
-  s.authors = ["Mashape"]
-  s.date = "2015-04-07"
+  s.authors = ["Kenneth Lee"]
+  s.date = "2015-04-09"
   s.description = "The ruby agent reports API traffic to http://apianalytics.com"
-  s.email = "opensource@mashape.com"
+  s.email = "kennethkl@gmail.com"
   s.extra_rdoc_files = [
     "LICENSE",
     "README.md"
