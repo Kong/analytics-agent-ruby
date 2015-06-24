@@ -36,15 +36,15 @@ require 'shoulda'
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
-require 'apianalytics'
+require 'mashape-analytics'
 
 class MiniTest::Test
   @@host = 'tcp://127.0.0.1:2200'
 
-  ApiAnalytics::Capture.setOptions(host: @@host) # Set default host
+  MashapeAnalytics::Capture.setOptions(host: @@host) # Set default host
 
   def zmq_pull_socket(host)
-    pull_socket = ApiAnalytics::Capture.context.socket(:PULL)
+    pull_socket = MashapeAnalytics::Capture.context.socket(:PULL)
     pull_socket.bind(host)
 
     return pull_socket

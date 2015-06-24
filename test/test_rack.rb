@@ -9,7 +9,7 @@ class TestRack < MiniTest::Test
       sleep 0.05
       [200, {'CONTENT-TYPE' => 'application/json'}, ['{"messages": "Test Response"}']]
     end
-    stack = ApiAnalytics::Frameworks::Rack.new app, service_token: 'SERVICE-TOKEN', host: '127.0.0.1:2200', send_body: @send_body
+    stack = MashapeAnalytics::Frameworks::Rack.new app, service_token: 'SERVICE-TOKEN', host: '127.0.0.1:2200', send_body: @send_body
     Rack::MockRequest.new(stack)
   end
 
@@ -19,7 +19,7 @@ class TestRack < MiniTest::Test
   end
 
   def teardown
-    ApiAnalytics::Capture.disconnect
+    MashapeAnalytics::Capture.disconnect
     @zmq_pull.close
     @send_body = false
   end

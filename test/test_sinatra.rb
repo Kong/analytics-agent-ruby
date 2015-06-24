@@ -1,8 +1,7 @@
 require 'sinatra'
 require 'sinatra/base'
-require 'helper'
 require 'rack'
-require 'apianalytics'
+require 'helper'
 
 
 class TestSinatra < MiniTest::Test
@@ -10,9 +9,9 @@ class TestSinatra < MiniTest::Test
 
   def app
     Sinatra.new do
-      register ApiAnalytics::Frameworks::Sinatra
+      register MashapeAnalytics::Frameworks::Sinatra
 
-      apianalytics! 'MY-API-KEY', host: '127.0.0.1:2200', send_body: true
+      mashapeAnalytics! 'MY-API-KEY', host: '127.0.0.1:2200', send_body: true
 
       get('/get') { 'GET Endpoint' }
       post('/post') { 'POST Endpoint' }
@@ -25,7 +24,7 @@ class TestSinatra < MiniTest::Test
   end
 
   def teardown
-    ApiAnalytics::Capture.disconnect
+    MashapeAnalytics::Capture.disconnect
     @zmq_pull.close if @zmq_pull != nil
   end
 

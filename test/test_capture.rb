@@ -9,13 +9,13 @@ class TestCapture < MiniTest::Test
   end
 
   def teardown
-    ApiAnalytics::Capture.disconnect
+    MashapeAnalytics::Capture.disconnect
     @zmq_pull.close
   end
 
   should 'send ALF' do
-    alf = ApiAnalytics::Message::Alf.new 'SERVICE-TOKEN', 'ENVIRONMENT'
-    ApiAnalytics::Capture.record! alf
+    alf = MashapeAnalytics::Message::Alf.new 'SERVICE-TOKEN', 'ENVIRONMENT'
+    MashapeAnalytics::Capture.record! alf
 
     version, message = @zmq_pull.recv().split(' ', 2)
 
