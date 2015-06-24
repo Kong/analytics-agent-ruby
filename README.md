@@ -1,24 +1,21 @@
-Ruby Agent Mashape Analytics
+Mashape Analytics Ruby Agent
 =============================
 
 > for more information on Mashape Analytics, please visit [apianalytics.com](https://www.apianalytics.com)
 
+Installation
+-------------
 
-Quick Start
-------------
+```sh
+gem 'mashape-analytics'
+bundle install
+```
 
-1. Add the gem to your Gemfile and install the gem
-
-    ```text
-    gem 'mashape-analytics'
-    bundle install
-    ```
-
-2. Follow the guide that tailors to your framework.
+Usage
+------
 
 
-Ruby on Rails
---------------
+### Ruby on Rails
 
 Open your `config/environment.rb` file, and within the `Rails::Initializer.run` block, add the middleware as below:
 
@@ -30,11 +27,10 @@ Rails::Initializer.run do |config|
 end
 ```
 
-In rails 4, put the `config.middleware.use` line in the `config/application.rb` file.
+*In rails 4, put the `config.middleware.use` line in the `config/application.rb` file.*
 
 
-Sinatra
---------
+### Sinatra
 
 Register the middleware. Then activate it.
 
@@ -46,13 +42,10 @@ require 'mashape-analytics'
 register MashapeAnalytics::Frameworks::Sinatra
 
 mashapeAnalytics! 'SERVICE_TOKEN', environment: 'production'
-
-# ... the rest of your code ...
 ```
 
 
-Rack
------
+### Rack
 
 Add the middleware.
 
@@ -61,8 +54,6 @@ require 'rack'
 require 'mashape-analytics'
 
 use MashapeAnalytics::Frameworks::Rack, service_token: 'SERVICE_TOKEN', environment: 'production'
-
-# ... the rest of your code ...
 ```
 
 
@@ -71,6 +62,4 @@ Copyright and License
 
 Copyright Mashape Inc, 2015.
 
-Licensed under [the MIT License](https://github.com/mashape/analytics-agent-python/blob/master/LICENSE)
-
-
+Licensed under [the MIT License](https://github.com/mashape/analytics-agent-ruby/blob/master/LICENSE)
