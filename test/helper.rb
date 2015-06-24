@@ -39,7 +39,7 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'mashape-analytics'
 
 class MiniTest::Test
-  @@host = 'tcp://127.0.0.1:56000'
+  @@host = 'tcp://127.0.0.1:' << (56000 + rand(999)).to_s
 
   MashapeAnalytics::Capture.setOptions(host: @@host) # Set default host
 
