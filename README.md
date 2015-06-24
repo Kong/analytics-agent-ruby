@@ -57,4 +57,4 @@ use ApiAnalytics::Frameworks::Rack, service_token: 'SERVICE_TOKEN'
 
 Copyright Mashape Inc, 2015.
 
-Licensed under [the MIT License](https://github.com/mashape/analytics-agent-java/blob/master/LICENSE)
+Licensed under [the MIT License](https://github.com/Mashape/analytics-agent-ruby/blob/master/LICENSE)
