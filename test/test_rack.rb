@@ -9,7 +9,7 @@ class TestRack < MiniTest::Test
       sleep 0.05
       [200, {'CONTENT-TYPE' => 'application/json'}, ['{"messages": "Test Response"}']]
     end
-    stack = MashapeAnalytics::Frameworks::Rack.new app, service_token: 'SERVICE-TOKEN', host: '127.0.0.1:2200', send_body: @send_body
+    stack = MashapeAnalytics::Frameworks::Rack.new app, service_token: 'SERVICE-TOKEN', host: @@host, send_body: @send_body
     Rack::MockRequest.new(stack)
   end
 

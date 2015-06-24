@@ -11,7 +11,7 @@ class TestSinatra < MiniTest::Test
     Sinatra.new do
       register MashapeAnalytics::Frameworks::Sinatra
 
-      mashapeAnalytics! 'MY-API-KEY', host: '127.0.0.1:2200', send_body: true
+      mashapeAnalytics! 'MY-API-KEY', host: @@host, send_body: true
 
       get('/get') { 'GET Endpoint' }
       post('/post') { 'POST Endpoint' }
@@ -20,7 +20,7 @@ class TestSinatra < MiniTest::Test
 
   def setup
     # Create our socket server
-    @zmq_pull = zmq_pull_socket('tcp://127.0.0.1:2200')
+    @zmq_pull = zmq_pull_socket(@@host)
   end
 
   def teardown
