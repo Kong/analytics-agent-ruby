@@ -1,19 +1,16 @@
-Mashape Analytics Ruby Agent
-=============================
+# Mashape Analytics Ruby Agent
 
 > for more information on Mashape Analytics, please visit [apianalytics.com](https://www.apianalytics.com)
 
-Installation
--------------
+## Installation
+
 
 ```sh
 gem 'mashape-analytics'
 bundle install
 ```
 
-Usage
-------
-
+## Usage
 
 ### Ruby on Rails
 
@@ -57,8 +54,7 @@ use MashapeAnalytics::Frameworks::Rack, service_token: 'SERVICE_TOKEN', environm
 ```
 
 
-Copyright and License
-----------------------
+## Copyright and License
 
 Copyright Mashape Inc, 2015.
 
