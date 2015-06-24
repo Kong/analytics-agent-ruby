@@ -19,9 +19,9 @@ module MashapeAnalytics::Frameworks
       @service_token = options[:service_token]
       @environment = options[:environment] || ''
       @send_body = options[:send_body] || false
-      host = options[:host] || 'socket.analytics.mashape.com:5500'
+      host = options[:host] || 'tcp://socket.analytics.mashape.com:5500'
 
-      MashapeAnalytics::Capture.setOptions(host: 'tcp://' + host)
+      MashapeAnalytics::Capture.setOptions(host: host)
     end
 
     def call(env)
