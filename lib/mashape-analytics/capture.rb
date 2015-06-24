@@ -1,6 +1,6 @@
-require 'apianalytics/utils'
+require 'mashape-analytics/utils'
 
-module ApiAnalytics
+module MashapeAnalytics
   class Capture
     require 'rbczmq'
 
@@ -8,7 +8,7 @@ module ApiAnalytics
     @zmq_push = nil
     @connected = false
     @options = {
-      host: 'tcp://socket.apianalytics.com:5000'
+      host: 'tcp://socket.analytics.mashape.com:5500'
     }
     @thread = nil
 
@@ -27,7 +27,7 @@ module ApiAnalytics
         while @connected
           begin
             alf = @@queue.pop_with_timeout(1)  # 1s timeout
-            @zmq_push.send alf.to_s
+            @zmq_push.send 'alf_1.0.0 ' << alf.to_s
           rescue => ex
             # TODO log debug
           end

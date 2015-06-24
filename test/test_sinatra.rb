@@ -33,7 +33,7 @@ class TestSinatra < MiniTest::Test
     request = Rack::MockRequest.new(app)
     response = request.get('/get?query=test')
 
-    message = @zmq_pull.recv
+    version, message = @zmq_pull.recv.split(' ', 2)
     alf = JSON.parse(message)
 
     assert_ruby_agent alf
@@ -47,7 +47,7 @@ class TestSinatra < MiniTest::Test
     request = Rack::MockRequest.new(app)
     response = request.post('/post')
 
-    message = @zmq_pull.recv
+    version, message = @zmq_pull.recv.split(' ', 2)
     alf = JSON.parse(message)
 
     assert_ruby_agent alf

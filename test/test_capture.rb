@@ -14,13 +14,15 @@ class TestCapture < MiniTest::Test
   end
 
   should 'send ALF' do
-    alf = ApiAnalytics::Message::Alf.new 'SERVICE-TOKEN'
+    alf = ApiAnalytics::Message::Alf.new 'SERVICE-TOKEN', 'ENVIRONMENT'
     ApiAnalytics::Capture.record! alf
 
-    message = @zmq_pull.recv
+    version, message = @zmq_pull.recv().split(' ', 2)
+
     alf = JSON.parse(message)
 
     assert_ruby_agent alf
+    assert_equal 'alf_1.0.0', version
   end
 
 end

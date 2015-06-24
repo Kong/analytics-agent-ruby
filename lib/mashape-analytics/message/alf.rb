@@ -1,24 +1,30 @@
 require 'json'
 
-module ApiAnalytics::Message
+module MashapeAnalytics::Message
   class Alf
     attr_accessor :test
 
-    def initialize(serviceToken)
+    def initialize(serviceToken, environment, clientIp = nil)
       @entries = []
       @alf = {
+        version: '1.0.0',
         serviceToken: serviceToken,
+        environment: environment,
         har: {
           log: {
             version: '1.2',
             creator: {
-              name: 'Ruby Agent',
+              name: 'mashape-analytics-agent-ruby',
               version: '1.0.0'
             },
             entries: @entries
           }
         }
       }
+
+      if clientIp
+        @alf.clientIpAddress = clientIp
+      end
     end
 
     def add_entry(entry)

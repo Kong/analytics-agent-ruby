@@ -51,7 +51,7 @@ class MiniTest::Test
   end
 
   def assert_ruby_agent(alf_json)
-    assert_equal 'Ruby Agent', alf_json['har']['log']['creator']['name']
+    assert_equal 'mashape-analytics-agent-ruby', alf_json['har']['log']['creator']['name']
   end
 
   def assert_entry_request(entry_json, method, url)

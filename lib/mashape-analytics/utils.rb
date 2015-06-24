@@ -1,4 +1,4 @@
-module ApiAnalytics::Utils
+module MashapeAnalytics::Utils
 
   # Source: http://spin.atomicobject.com/2014/07/07/ruby-queue-pop-timeout/
   class QueueWithTimeout

@@ -1,9 +1,8 @@
-require 'apianalytics/capture'
+require 'mashape-analytics/capture'
 require 'time'
 require 'socket'
 require 'rack/utils'
 
-# Hack
 def status_code(status)
   Rack::Utils::HTTP_STATUS_CODES[status] || ''
 end
@@ -12,16 +11,17 @@ def header_hash(headers)
   Rack::Utils::HeaderHash.new.merge(headers)
 end
 
-module ApiAnalytics::Frameworks
+module MashapeAnalytics::Frameworks
   class Rack
 
     def initialize(app, options = {})
       @app = app
       @service_token = options[:service_token]
+      @environment = options[:environment] || ''
       @send_body = options[:send_body] || false
-      host = options[:host] || 'socket.apianalytics.com:5000'
+      host = options[:host] || 'socket.analytics.mashape.com:5500'
 
-      ApiAnalytics::Capture.setOptions(host: 'tcp://' + host)
+      MashapeAnalytics::Capture.setOptions(host: 'tcp://' + host)
     end
 
     def call(env)
@@ -38,7 +38,7 @@ module ApiAnalytics::Frameworks
         raise TypeError, "stringable or iterable required"
       end
 
-      record_entry startedDateTime, env, {
+      record_alf startedDateTime, env, {
         :status => status,
         :headers => header_hash(headers),
         :body => body
@@ -47,6 +47,7 @@ module ApiAnalytics::Frameworks
       [status, headers, body]
     end
 
+  protected
     def host(request)
       if forwarded = request['HTTP_X_FORWARDED_HOST']
         forwarded.split(/,\s?/).last
@@ -128,9 +129,9 @@ module ApiAnalytics::Frameworks
       end
     end
 
-    def record_entry(startedDateTime, request, response)
+    def record_alf(startedDateTime, request, response)
       time = Time.now - startedDateTime
-      alf = ApiAnalytics::Message::Alf.new @service_token
+      alf = MashapeAnalytics::Message::Alf.new @service_token, @environment
 
       req_headers_size = request_header_size(request)
       req_content_size = request_content_size(request)
@@ -141,10 +142,12 @@ module ApiAnalytics::Frameworks
       entry = {
         startedDateTime: startedDateTime.iso8601,
         serverIpAddress: Socket.ip_address_list.detect{|intf| intf.ipv4_private?}.ip_address,
+        time: (time * 1000).to_i,
         request: {
           method: request['REQUEST_METHOD'],
           url: absolute_url(request),
           httpVersion: 'HTTP/1.1', # not available, default http/1.1
+          cookies: [],
           queryString: request_query_string(request),
           headers: request_headers(request),
           headersSize: req_headers_size,
@@ -158,18 +161,25 @@ module ApiAnalytics::Frameworks
           status: response[:status],
           statusText: status_code(response[:status]),
           httpVersion: 'HTTP/1.1', # not available, default http/1.1
+          cookies: [],
           headers: response_headers(response),
           headersSize: res_headers_size,
           content: {
             size: res_content_size,
             mimeType: response[:headers]['Content-Type'] || 'application/octet-stream'
           },
-          bodySize: res_headers_size + res_content_size
+          bodySize: res_headers_size + res_content_size,
+          redirectURL: response[:headers]['Location'] || ''
         },
+        cache: {},
         timings: {
+          blocked: -1,
+          dns: -1,
+          connect: -1,
           send: 0,
           wait: (time * 1000).to_i,
           receive: 0,
+          ssl: -1
         }
       }
 
@@ -184,7 +194,7 @@ module ApiAnalytics::Frameworks
       end
 
       alf.add_entry entry
-      ApiAnalytics::Capture.record! alf
+      MashapeAnalytics::Capture.record! alf
     end
 
   end

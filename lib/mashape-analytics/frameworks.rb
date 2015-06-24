@@ -1,20 +1,20 @@
 
 # == Rack Hook =============================================================
 if (defined?(Rack))
-  require 'apianalytics/frameworks/rack'
+  require 'mashape-analytics/frameworks/rack'
 end
 
 # == Sinatra Hook ==========================================================
 if (defined?(Sinatra))
-  require 'apianalytics/frameworks/sinatra'
+  require 'mashape-analytics/frameworks/sinatra'
 end
 
 # == Rails Hook ============================================================
 
 if (defined?(Rails))
-  require 'apianalytics/frameworks/rails'
+  require 'mashape-analytics/frameworks/rails'
 end
 
 
-module ApiAnalytics::Frameworks
+module MashapeAnalytics::Frameworks
 end

@@ -1,72 +1,76 @@
-# API Analytics Ruby Agent
+Ruby Agent Mashape Analytics
+=============================
 
-The ruby agent reports API traffic to [API Analytics](http://apianalytics.com).
+> for more information on Mashape Analytics, please visit [apianalytics.com](https://www.apianalytics.com)
 
 
-## Quick Start
+Quick Start
+------------
 
 1. Add the gem to your Gemfile and install the gem
 
     ```text
-    gem 'apianalytics'
+    gem 'mashape-analytics'
     bundle install
     ```
 
 2. Follow the guide that tailors to your framework.
 
-### Ruby on Rails
+
+Ruby on Rails
+--------------
 
 Open your `config/environment.rb` file, and within the `Rails::Initializer.run` block, add the middleware as below:
 
 ```ruby
-require 'apianalytics'
+require 'mashape-analytics'
 
 Rails::Initializer.run do |config|
-  config.middleware.use ApiAnalytics::Frameworks::Rails, service_token: 'SERVICE_TOKEN'
+  config.middleware.use MashapeAnalytics::Frameworks::Rails, service_token: 'SERVICE_TOKEN', environment: 'production'
 end
 ```
 
 In rails 4, put the `config.middleware.use` line in the `config/application.rb` file.
 
-### Sinatra
+
+Sinatra
+--------
 
 Register the middleware. Then activate it.
 
 ```ruby
 # myapp.rb
 require 'sinatra'
-require 'apianalytics'
+require 'mashape-analytics'
 
-register ApiAnalytics::Frameworks::Sinatra
+register MashapeAnalytics::Frameworks::Sinatra
 
-apianalytics! 'SERVICE_TOKEN'
+mashapeAnalytics! 'SERVICE_TOKEN', environment: 'production'
 
 # ... the rest of your code ...
 ```
 
 
-### Rack
+Rack
+-----
 
 Add the middleware.
 
 ```ruby
 require 'rack'
-require 'apianalytics'
+require 'mashape-analytics'
 
-use ApiAnalytics::Frameworks::Rack, service_token: 'SERVICE_TOKEN'
+use MashapeAnalytics::Frameworks::Rack, service_token: 'SERVICE_TOKEN', environment: 'production'
 
 # ... the rest of your code ...
 ```
 
 
-## Contributing to apianalytics
+Copyright and License
+----------------------
 
-* Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
-* Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it.
-* Fork the project.
-* Start a feature/bugfix branch.
-* Commit and push until you are happy with your contribution.
-* Make sure to add tests for it. This is important so we don't break it in a future version unintentionally.
-* Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
+Copyright Mashape Inc, 2015.
+
+Licensed under [the MIT License](https://github.com/mashape/analytics-agent-python/blob/master/LICENSE)
 
 
