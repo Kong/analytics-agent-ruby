@@ -40,6 +40,7 @@ require 'mashape-analytics'
 
 class MiniTest::Test
   @@host = 'tcp://127.0.0.1:' << (56000 + rand(999)).to_s
+  puts 'Using test zmq server ' << @@host
 
   MashapeAnalytics::Capture.setOptions(host: @@host) # Set default host
 

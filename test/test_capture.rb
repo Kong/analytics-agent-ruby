@@ -10,7 +10,7 @@ class TestCapture < MiniTest::Test
 
   def teardown
     MashapeAnalytics::Capture.disconnect
-    @zmq_pull.close
+    @zmq_pull.close if @zmq_pull != nil
   end
 
   should 'send ALF' do
