@@ -52,3 +52,9 @@ require 'apianalytics'
 
 use ApiAnalytics::Frameworks::Rack, service_token: 'SERVICE_TOKEN'
 ```
+
+## Copyright and license
+
+Copyright Mashape Inc, 2015.
+
+Licensed under [the MIT License](https://github.com/mashape/analytics-agent-java/blob/master/LICENSE)
