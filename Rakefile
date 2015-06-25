@@ -14,7 +14,7 @@ require 'rake'
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://guides.rubygems.org/specification-reference/ for more options
-  gem.name = "apianalytics"
+  gem.name = "mashape-analytics"
   gem.homepage = "http://github.com/Mashape/analytics-agent-ruby"
   gem.license = "MIT"
   gem.summary = %Q{Ruby agent for Mashape API Analytics}
