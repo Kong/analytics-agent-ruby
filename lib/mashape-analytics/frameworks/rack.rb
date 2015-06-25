@@ -102,7 +102,11 @@ module MashapeAnalytics::Frameworks
       if request['HTTP_CONTENT_LENGTH']
         request['HTTP_CONTENT_LENGTH'].to_i
       else
-        request['rack.input'].size
+        if request['rack.input'].respond_to? :size
+          request['rack.input'].size
+        else
+          -1 # Not available
+        end
       end
     end
 
