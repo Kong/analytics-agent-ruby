@@ -19,6 +19,8 @@ bundle install
 
 ### Ruby on Rails
 
+Make sure to add `mashape-analytics` to your Gemfile.
+
 Open your `config/environment.rb` file, and within the `Rails::Initializer.run` block, add the middleware as below:
 
 ```ruby
@@ -31,6 +33,13 @@ end
 
 *In rails 4, put the `config.middleware.use` line in the `config/application.rb` file.*
 
+```ruby
+module MyApp
+  class Application < Rails::Application
+    config.middleware.use 'MashapeAnalytics::Frameworks::Rails', service_token: 'SERVICE_TOKEN', environment: 'production'
+  end
+end
+```
 
 ### Sinatra
 

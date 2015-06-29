@@ -29,11 +29,11 @@ module MashapeAnalytics::Frameworks
       status, headers, body = @app.call(env)
 
       if body.respond_to? :to_str
-        body = [body.to_str]
+        response_body = [body.to_str]
       elsif body.respond_to?(:body)
-        body = [body.body]
+        response_body = [body.body]
       elsif body.respond_to?(:each)
-        # do nothing
+        response_body = body
       else
         raise TypeError, "stringable or iterable required"
       end
@@ -41,7 +41,7 @@ module MashapeAnalytics::Frameworks
       record_alf startedDateTime, env, {
         :status => status,
         :headers => header_hash(headers),
-        :body => body
+        :body => response_body
       }
 
       [status, headers, body]
@@ -98,12 +98,27 @@ module MashapeAnalytics::Frameworks
         end
     end
 
+    def stream_size(stream)
+      size = nil
+      io = StringIO.new
+      begin
+        stream.write io
+        io.flush
+        size = io.size
+      ensure
+        io.close
+      end
+      size
+    end
+
     def request_content_size(request)
       if request['HTTP_CONTENT_LENGTH']
         request['HTTP_CONTENT_LENGTH'].to_i
       else
         if request['rack.input'].respond_to? :size
           request['rack.input'].size
+        elsif request['rack.input'].respond_to? :write
+          stream_size(request['rack.input'])
         else
           -1 # Not available
         end
@@ -126,10 +141,17 @@ module MashapeAnalytics::Frameworks
     end
 
     def response_content_size(response)
+      # puts 'BODY: ' << response[:body]
       if response[:headers]['Content-Length']
         response[:headers]['Content-Length'].to_i
       else
-        response[:body].inject(0) { |sum, b| sum + b.bytesize }
+        if response[:body].respond_to? :inject
+          response[:body].inject(0) { |sum, b| sum + b.bytesize }
+        elsif response[:body].respond_to? :write
+          stream_size(response[:body])
+        else
+          -1 # Not available
+        end
       end
     end
 
@@ -193,8 +215,12 @@ module MashapeAnalytics::Frameworks
         request['rack.input'].rewind
         entry[:request][:content][:text] = Base64.strict_encode64(request['rack.input'].read)
 
-        entry[:response][:content][:encoding] = 'base64'
-        entry[:response][:content][:text] = Base64.strict_encode64(response[:body].join())
+
+        # TODO Handle streams as well
+        if response[:body].respond_to? :join
+          entry[:response][:content][:encoding] = 'base64'
+          entry[:response][:content][:text] = Base64.strict_encode64(response[:body].join())
+        end
       end
 
       alf.add_entry entry

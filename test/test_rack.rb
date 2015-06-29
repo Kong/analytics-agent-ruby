@@ -13,6 +13,16 @@ class TestRack < MiniTest::Test
     Rack::MockRequest.new(stack)
   end
 
+  def compressed_app
+    app = proc do
+      sleep 0.05
+      [200, {'CONTENT-TYPE' => 'application/json'}, ['{"messages": "Test Response"}']]
+    end
+    stack = Rack::Deflater.new app
+    stack = MashapeAnalytics::Frameworks::Rack.new stack, service_token: 'SERVICE-TOKEN', host: @@host, send_body: @send_body
+    Rack::MockRequest.new(stack)
+  end
+
   def setup
     # Create our socket server
     @zmq_pull = zmq_pull_socket(@@host)
@@ -65,6 +75,19 @@ class TestRack < MiniTest::Test
 
     assert_entry_response entry, 200, 76
     assert_entry_response_content entry, 'base64', 'eyJtZXNzYWdlcyI6ICJUZXN0IFJlc3BvbnNlIn0='
+  end
+
+  should 'send ALF with compressed body' do
+    response = compressed_app.get('/get?foo=bar&empty', {'HTTP_ACCEPT' => 'application/json'})
+
+    version, message = @zmq_pull.recv.split(' ', 2)
+    alf = JSON.parse(message)
+
+    assert_ruby_agent alf
+
+    entry = alf['har']['log']['entries'].first
+    assert_entry_request entry, 'GET', 'http://example.org/get?foo=bar&empty'
+    assert_entry_response entry, 200, 99
   end
 
 
