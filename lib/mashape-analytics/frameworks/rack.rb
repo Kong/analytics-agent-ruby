@@ -82,7 +82,7 @@ module MashapeAnalytics::Frameworks
 
       # {KEY}: {VALUE}\n\r = 4 extra characters for `: ` and `\n\r` minus `HTTP_` in the KEY is -1
       header_fields = request.select { |k,v| k.start_with? 'HTTP_' }
-        .map { |k,v| k.length + v.bytesize - 1 }
+        .map { |k,v| k.length + (v.respond_to?(:bytesize) ? v.bytesize : 0) - 1 }
         .inject(0) { |sum,v| sum + v }
 
       last_line = 2 # /r/n
