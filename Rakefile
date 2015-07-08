@@ -17,7 +17,7 @@ Jeweler::Tasks.new do |gem|
   gem.name = "mashape-analytics"
   gem.homepage = "http://github.com/Mashape/analytics-agent-ruby"
   gem.license = "MIT"
-  gem.summary = %Q{Ruby agent for Mashape API Analytics}
+  gem.summary = %Q{Ruby agent for Mashape Analytics}
   gem.description = %Q{The ruby agent reports API traffic to http://apianalytics.com}
   gem.email = "kennethkl@gmail.com"
   gem.authors = ["Kenneth Lee"]
