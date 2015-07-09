@@ -45,7 +45,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/Mashape/analytics-agent-ruby"
   s.licenses = ["MIT"]
   s.rubygems_version = "2.4.6"
-  s.summary = "Ruby agent for Mashape API Analytics"
+  s.summary = "Ruby agent for Mashape Analytics"
 
   if s.respond_to? :specification_version then
     s.specification_version = 4
