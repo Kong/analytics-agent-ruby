@@ -167,7 +167,7 @@ module MashapeAnalytics::Frameworks
 
       entry = {
         startedDateTime: startedDateTime.iso8601,
-        serverIpAddress: Socket.ip_address_list.detect{|intf| intf.ipv4_private?}.ip_address,
+        serverIPAddress: Socket.ip_address_list.detect{|intf| intf.ipv4_private?}.ip_address,
         time: (time * 1000).to_i,
         request: {
           method: request['REQUEST_METHOD'],
